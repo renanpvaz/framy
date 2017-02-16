@@ -16,9 +16,9 @@ const store = {
  },
 };
 
-function Component(config) {
-  const proto = {
-    id: config.id,
+function Component(proto) {
+  const base = {
+    id: proto.id,
     state: {},
 
     update(prevEl) {
@@ -42,7 +42,7 @@ function Component(config) {
     },
 
     swapNodes(oldEl, newEl) {
-      if (newEl.isEqualNode(oldEl) && newEl.value === oldEl.value) {
+      if (newEl.isEqualNode(oldEl)) {
         console.warn('render() was called but there was no change in the rendered output', newEl);
       } else if (!!oldEl) {
         oldEl.parentElement.replaceChild(newEl, oldEl);
@@ -55,9 +55,13 @@ function Component(config) {
       this.state = Object.assign({}, this.state, newState);
       store.triggerListener(this.id);
     },
+
+    componentDidMount() {
+      
+    }
   };
 
-  const component = Object.assign({}, proto, config);
+  const component = Object.assign({}, base, proto);
   let el = component.render();
 
   component.componentDidMount();

@@ -1,23 +1,18 @@
-const switchType = (value, cases) => {
-  switch (typeof value) {
-    case 'string':
-      cases.string(value);
-      break;
-    case 'object':
-      cases.object(value);
-      break;
-    case 'number':
-      cases.number(value);
-      break;
-  }
+const attributesToImplicitSet = {
+  value: true
 };
 
 const assignNested = (to, from) => {
   Object.keys(from).forEach(key => {
-    if (typeof to[key] === 'object' && !!to[key]) {
-      assignNested(to[key], from[key]);
+    const toValue = to[key];
+    const fromValue = from[key];
+
+    if (typeof toValue === 'object' && !!toValue) {
+      assignNested(toValue, fromValue);
+    } else if (!(key in attributesToImplicitSet)) {
+      to[key] = fromValue;
     } else {
-      to[key] = from[key];
+      to.setAttribute(key, fromValue);
     }
   });
 
@@ -25,12 +20,16 @@ const assignNested = (to, from) => {
 };
 
 const append = (el, child) => {
-  switchType(child, {
-    object: element => el.appendChild(element),
-    string: element => el.appendChild(
-      document.createTextNode(child)
-    ),
-  });
+  switch (typeof child) {
+    case 'object':
+      el.appendChild(child);
+      break;
+    case 'string':
+      el.appendChild(
+        document.createTextNode(child)
+      );
+      break;
+  }
 };
 
 const createElement = (name, textContentOrElementOrAttrs, ...children) => {
