@@ -1,3 +1,7 @@
+const specialAttrs = {
+  'INPUT': 'value'
+};
+
 const store = {
   listeners: {},
 
@@ -24,13 +28,27 @@ function Component(config) {
     update(prevEl) {
       const nextEl = this.render();
 
-      if (nextEl.isEqualNode(prevEl)) {
-        console.warn('render() was called but there was no change in the rendered output', el);
+      if (nextEl.hasChildNodes) {
+        this.updateMany(nextEl.childNodes, prevEl.childNodes);
       } else {
-        prevEl.parentElement.replaceChild(nextEl, prevEl);
+        this.swapNodes(prevEl, nextEl);
       }
 
-      return nextEl;
+      return prevEl;
+    },
+
+    updateMany(nextEls, prevEls) {
+      [].slice.call(nextEls).forEach((next, i, arr) => {
+        this.swapNodes(prevEls[i], next);
+      });
+    },
+
+    swapNodes(oldEl, newEl) {
+      if (newEl.isEqualNode(oldEl) && newEl.value === oldEl.value) {
+        console.warn('render() was called but there was no change in the rendered output', newEl);
+      } else if (!!oldEl) {
+        oldEl.parentElement.replaceChild(newEl, oldEl);
+      }
     },
 
     setState(newState) {
