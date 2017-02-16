@@ -14,7 +14,7 @@ const switchType = (value, cases) => {
 
 const assignNested = (to, from) => {
   Object.keys(from).forEach(key => {
-    if (typeof to[key] === 'object') {
+    if (typeof to[key] === 'object' && !!to[key]) {
       assignNested(to[key], from[key]);
     } else {
       to[key] = from[key];
@@ -59,22 +59,11 @@ const p = wrap('p');
 const section = wrap('section');
 const img = wrap('img');
 const header = wrap('header');
+const footer = wrap('footer');
 const a = wrap('a');
-
-
-div({ id: 'app' },
-  header({ className: 'header' },
-    h1({ className: 'header__title' }, 'Know It All'),
-    a(
-      {
-        className: 'header__help',
-        target: '_blank',
-        rel: 'noopener noreferrer',
-        title: 'Find out more about know it all',
-        href: 'https://hackernoon.com/what-you-dont-know-about-web-development-d7d631f5d468#.ex2yp6d64',
-      },
-      'What is this?'
-    )
-  ),
-  div({ className: 'skill-table' })
-);
+const li = wrap('li');
+const ul = wrap('ul');
+const label = wrap('label');
+const s = wrap('s');
+const input = wrap('input');
+const button = wrap('button');

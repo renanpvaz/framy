@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Todos List</title>
+  </head>
+  <body>
+    <h1>Todos</h1>
+
+    <script type="text/javascript" src="../index.js"></script>
+    <script type="text/javascript" src="../component.js"></script>
+    <script type="text/javascript">
+
+      const TextInput = (props) => Component({
+        id: props.id,
+
+        render() {
+          return (
+            div(
+              input({ type: 'text', onchange: props.onChange })
+            )
+          );
+        },
+      });
+      const Task = (props) => Component({
+        id: props.id,
+        state: {},
+
+        render() {
+          const { checked, name, id } = props;
+
+          return (
+            li({ id },
+              label(
+                input({
+                  type: 'checkbox',
+                  onclick: () => props.onClick(this.id),
+                  checked
+                }),
+                checked ? s(name) : name
+              )
+            )
+          );
+        },
+      });
+      const TaskList = (props) => Component({
+        id: props.id,
+        state: {
+          tasks: props.tasks
+        },
+
+        handleTaskClick(id) {
+          const tasks = this.state.tasks.slice();
+          const task = tasks.find(task => task.id === id);
+
+          tasks.splice(tasks.indexOf(task), 1);
+
+          this.setState({
+            tasks: [
+              ...tasks,
+              Object.assign(task, { checked: !task.checked })
+            ]
+          });
+        },
+        render() {
+          const onClick = this.handleTaskClick.bind(this);
+          const { tasks } = props;
+
+          return (
+            ul(
+              ...tasks.map(
+                task => Task(Object.assign({ onClick }, task))
+              )
+            )
+          );
+        },
+      });
+      const TodoApp = (props) => Component({
+        id: props.id,
+        state: {
+          tasks: [
+            { id: 1, checked: false, name: 'Do laundry' },
+            { id: 2, checked: false, name: 'Wash dishes' },
+            { id: 3, checked: false, name: 'Try creating prepreact' },
+          ],
+          newTask: { checked: false }
+        },
+
+        addTask() {
+          const { tasks, newTask } = this.state;
+
+          this.setState({
+            tasks: [
+              ...tasks,
+              Object.assign({ id: tasks.length + 1 }, newTask)
+            ]
+          })
+        },
+
+        onInputChange({ target }) {
+          this.setState({
+            newTask: { checked: false, name: target.value }
+          });
+        },
+
+        render() {
+          return (
+            section(
+              TaskList({ id: 'task-list', tasks: this.state.tasks }),
+              footer(
+                button({ onclick: this.addTask.bind(this) }, 'add'),
+                TextInput({ onChange: this.onInputChange.bind(this) })
+              )
+            )
+          );
+        },
+      });
+
+      document.body.appendChild(
+        TodoApp({ name: 'todo' })
+      );
+    </script>
+  </body>
+</html>
