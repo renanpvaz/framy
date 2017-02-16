@@ -1,8 +1,17 @@
 const Square = props => Component({
+  id: props.id,
+  state: {
+    value: ''
+  },
+
+  onClick() {
+    this.setState({ value: 'X' });
+  },
+
   render() {
     return (
-      button({ className: 'square' }
-
+      button({ className: 'square', onclick: () => this.setState({ value: 'X' })},
+        this.state.value
       )
     );
   }
@@ -12,7 +21,7 @@ const Board = props => Component({
   id: props.id,
 
   renderSquare(i) {
-    return Square();
+    return Square({ id: i });
   },
 
   render() {

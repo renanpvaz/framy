@@ -22,31 +22,42 @@ function Component(proto) {
     state: {},
 
     update(prevEl) {
+      let wasSwapped = false;
       const nextEl = this.render();
 
       if (nextEl.children.length > 0) {
-        this.updateMany(nextEl.childNodes, prevEl.childNodes);
+        wasSwapped = this.updateMany(nextEl.childNodes, prevEl.childNodes);
       } else {
-        this.swapNodes(prevEl, nextEl);
+        wasSwapped = this.swapNodes(prevEl, nextEl);
       }
 
-      this.componentDidMount();
+      if (wasSwapped) {
+        this.componentDidMount();
+      }
 
-      return prevEl;
+      return wasSwapped ? nextEl : prevEl;
     },
 
     updateMany(nextEls, prevEls) {
+      let hasSwapped;
+
       [].slice.call(nextEls).forEach((next, i, arr) => {
-        this.swapNodes(prevEls[i], next);
+        hasSwapped = this.swapNodes(prevEls[i], next) && hasSwapped !== false;
       });
+
+      return hasSwapped;
     },
 
     swapNodes(oldEl, newEl) {
-      if (newEl.isEqualNode(oldEl)) {
+      let areEqual = newEl.isEqualNode(oldEl);
+
+      if (areEqual) {
         console.warn('render() was called but there was no change in the rendered output', newEl);
       } else if (!!oldEl) {
         oldEl.parentElement.replaceChild(newEl, oldEl);
       }
+
+      return !areEqual;
     },
 
     setState(newState) {
@@ -57,7 +68,7 @@ function Component(proto) {
     },
 
     componentDidMount() {
-      
+
     }
   };
 
@@ -65,9 +76,7 @@ function Component(proto) {
   let el = component.render();
 
   component.componentDidMount();
-  store.register(component.id, () => {
-    requestAnimationFrame(() => el = component.update(el));
-  });
+  store.register(component.id, () => el = component.update(el));
 
   return el;
 }
