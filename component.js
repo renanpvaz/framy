@@ -1,7 +1,3 @@
-const specialAttrs = {
-  'INPUT': 'value'
-};
-
 const store = {
   listeners: {},
 
@@ -28,11 +24,13 @@ function Component(config) {
     update(prevEl) {
       const nextEl = this.render();
 
-      if (nextEl.hasChildNodes) {
+      if (nextEl.children.length > 0) {
         this.updateMany(nextEl.childNodes, prevEl.childNodes);
       } else {
         this.swapNodes(prevEl, nextEl);
       }
+
+      this.componentDidMount();
 
       return prevEl;
     },
@@ -62,6 +60,7 @@ function Component(config) {
   const component = Object.assign({}, proto, config);
   let el = component.render();
 
+  component.componentDidMount();
   store.register(component.id, () => {
     requestAnimationFrame(() => el = component.update(el));
   });
