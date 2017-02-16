@@ -1,31 +1,45 @@
-const Square = props => Component({
-  id: props.id,
-  state: {
-    value: ''
-  },
-
-  onClick() {
-    this.setState({ value: 'X' });
-  },
-
-  render() {
-    return (
-      button({ className: 'square', onclick: () => this.setState({ value: 'X' })},
-        this.state.value
-      )
-    );
-  }
-});
+const Square = props => (
+  button({ className: 'square', onclick: () => props.onClick()},
+    props.value
+  )
+);
 
 const Board = props => Component({
   id: props.id,
+  state: {
+    squares: Array(9).fill(''),
+    xIsNext: true,
+  },
+
+  handleClick(i) {
+    const squares = this.state.squares.slice();
+
+    if (calculateWinner(squares) || squares[i]) return;
+
+    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    this.setState({
+      squares: squares,
+      xIsNext: !this.state.xIsNext,
+    });
+  },
 
   renderSquare(i) {
-    return Square({ id: i });
+    return Square({
+      id: i,
+      value: this.state.squares[i],
+      onClick: () => this.handleClick(i)
+    });
   },
 
   render() {
-    const status = 'Next player: X';
+    const winner = calculateWinner(this.state.squares);
+    let status;
+    if (winner) {
+      status = 'Winner: ' + winner;
+    } else {
+      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+    }
+
     return (
       div(
         div({ className: 'status'}, status),
