@@ -4,15 +4,16 @@ const attributesToImplicitSet = {
 
 const assignNested = (to, from) => {
   Object.keys(from).forEach(key => {
-    const toValue = to[key];
+    const lowerCaseKey = key.toLowerCase();
+    const toValue = to[lowerCaseKey];
     const fromValue = from[key];
 
     if (typeof toValue === 'object' && !!toValue) {
       assignNested(toValue, fromValue);
     } else if (!(key in attributesToImplicitSet)) {
-      to[key] = fromValue;
+      to[lowerCaseKey] = fromValue;
     } else {
-      to.setAttribute(key, fromValue);
+      to.setAttribute(lowerCaseKey, fromValue);
     }
   });
 

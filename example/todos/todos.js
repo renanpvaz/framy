@@ -10,7 +10,7 @@ const Task = (props) => Component({
         label(
           input({
             type: 'checkbox',
-            onclick: () => props.onClick(this.id),
+            onClick: () => props.onClick(this.id),
             checked
           }),
           checked ? s(name) : name
@@ -89,8 +89,8 @@ const TodoApp = (props) => Component({
     return (
       section(
         TaskList({ id: 'task-list', tasks }),
-        input({ type: 'text', onchange: this.onInputChange.bind(this), value: newTask.name }),
-        button({ onclick: this.addTask.bind(this) }, 'add')
+        input({ type: 'text', onChange: this.onInputChange.bind(this), value: newTask.name }),
+        button({ onClick: this.addTask.bind(this) }, 'add')
       )
     );
   },
