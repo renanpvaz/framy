@@ -24,8 +24,9 @@ function Component(proto) {
     update(prevEl) {
       let wasSwapped = false;
       const nextEl = this.render();
+      const hasChildren = nextEl.children.length > 0;
 
-      if (nextEl.children.length > 0) {
+      if (hasChildren) {
         wasSwapped = this.updateMany(nextEl.childNodes, prevEl.childNodes);
       } else {
         wasSwapped = this.swapNodes(prevEl, nextEl);
@@ -35,13 +36,14 @@ function Component(proto) {
         this.componentDidMount();
       }
 
-      return wasSwapped ? nextEl : prevEl;
+      return wasSwapped && !hasChildren ? nextEl : prevEl;
     },
 
     updateMany(nextEls, prevEls) {
+      const nextElements = [].slice.call(nextEls);
       let hasSwapped;
 
-      [].slice.call(nextEls).forEach((next, i, arr) => {
+      nextElements.forEach((next, i, arr) => {
         hasSwapped = this.swapNodes(prevEls[i], next) && hasSwapped !== false;
       });
 
