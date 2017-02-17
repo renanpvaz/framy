@@ -41,13 +41,9 @@ function Component(proto) {
 
     updateMany(nextEls, prevEls) {
       const nextElements = [].slice.call(nextEls);
-      let hasSwapped;
+      const results = nextElements.map((next, i, arr) => this.swapNodes(prevEls[i], next));
 
-      nextElements.forEach((next, i, arr) => {
-        hasSwapped = this.swapNodes(prevEls[i], next) && hasSwapped !== false;
-      });
-
-      return hasSwapped;
+      return results.some(r => r);
     },
 
     swapNodes(oldEl, newEl) {
