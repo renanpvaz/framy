@@ -42,28 +42,24 @@ const createElement = (name, textContentOrElementOrAttrs, ...children) => {
     assignNested(el, textContentOrElementOrAttrs);
   }
 
-  if (!!children) {
-    children.forEach(child =>  append(el, child));
-  }
+  children.forEach(child =>  append(el, child));
 
   return el;
 };
 
-const wrap = elementName => (...args) => createElement(elementName, ...args);
-
-const div = wrap('div');
-const h1 = wrap('h1');
-const span = wrap('span');
-const p = wrap('p');
-const section = wrap('section');
-const img = wrap('img');
-const header = wrap('header');
-const footer = wrap('footer');
-const a = wrap('a');
-const li = wrap('li');
-const ul = wrap('ul');
-const ol = wrap('ol');
-const label = wrap('label');
-const s = wrap('s');
-const input = wrap('input');
-const button = wrap('button');
+const div = (...args) => createElement('div', ...args)
+const h1 = (...args) => createElement('h1', ...args)
+const span = (...args) => createElement('span', ...args)
+const p = (...args) => createElement('p', ...args)
+const section = (...args) => createElement('section', ...args)
+const img = (...args) => createElement('img', ...args)
+const header = (...args) => createElement('header', ...args)
+const footer = (...args) => createElement('footer', ...args)
+const a = (...args) => createElement('a', ...args)
+const li = (...args) => createElement('li', ...args)
+const ul = (...args) => createElement('ul', ...args)
+const ol = (...args) => createElement('ol', ...args)
+const label = (...args) => createElement('label', ...args)
+const s = (...args) => createElement('s', ...args)
+const input = (...args) => createElement('input', ...args)
+const button = (...args) => createElement('button', ...args)

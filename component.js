@@ -56,7 +56,7 @@ function Component(proto) {
       if (areEqual) {
         console.warn('render() was called but there was no change in the rendered output', newEl);
       } else if (!!oldEl) {
-        oldEl.parentElement.replaceChild(newEl, oldEl);
+        requestAnimationFrame(() => oldEl.parentElement.replaceChild(newEl, oldEl));
       }
 
       return !areEqual;
@@ -71,6 +71,10 @@ function Component(proto) {
 
     componentDidMount() {
 
+    },
+
+    shouldComponentUpdate() {
+      return true;
     }
   };
 
