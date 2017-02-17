@@ -49,8 +49,8 @@ const Game = props => Component({
   },
 
   handleClick(i) {
-    const history = this.state.history;
-    const current = history[this.state.stepNumber];
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const current = history[history.length - 1];
     const squares = current.squares.slice();
 
     if (calculateWinner(squares) || squares[i]) {
@@ -60,7 +60,7 @@ const Game = props => Component({
     squares[i] = this.state.xIsNext ? 'X' : 'O';
 
     this.setState({
-      stepNumber: this.state.stepNumber + 1,
+      stepNumber: history.length,
       history: [...history, { squares }],
       xIsNext: !this.state.xIsNext,
     });
