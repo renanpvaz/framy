@@ -10,7 +10,9 @@
     <script type="text/javascript">
       const Clock = (props) => Component({
         id: props.id,
-        state: {},
+        state: {
+          time: '' // when used, state must be initialized
+        },
 
         componentDidMount() {
           setTimeout(() => {
