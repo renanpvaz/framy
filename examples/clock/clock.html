@@ -5,13 +5,11 @@
     <title>Clock</title>
   </head>
   <body>
-    <script type="text/javascript" src="../../elements.js"></script>
-    <script type="text/javascript" src="../../component.js"></script>
+    <script type="text/javascript" src="../../dist/framy.min.js"></script>
     <script type="text/javascript">
       const Clock = (props) => Component({
-        id: props.id,
         state: {
-          time: '' // when used, state must be initialized
+          time: ''
         },
 
         componentDidMount() {
@@ -25,9 +23,7 @@
         },
       });
 
-      document.body.appendChild(
-        Clock({ id: 'clock' })
-      );
+      document.body.appendChild(Clock());
     </script>
   </body>
 </html>

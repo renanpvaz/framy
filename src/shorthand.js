@@ -1,0 +1,18 @@
+[
+  'div',
+  'h1',
+  'span',
+  'p',
+  'section',
+  'img',
+  'header',
+  'footer',
+  'a',
+  'li',
+  'ul',
+  'ol',
+  'label',
+  's',
+  'input',
+  'button',
+].forEach(tag => window[tag] = (...args) => createElement(tag, ...args));

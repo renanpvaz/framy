@@ -5,7 +5,6 @@ const Square = props => (
 );
 
 const Board = props => Component({
-  id: props.id,
   state: {},
 
   renderSquare(i) {
@@ -39,7 +38,6 @@ const Board = props => Component({
 });
 
 const Game = props => Component({
-  id: props.id,
   state: {
     stepNumber: 0,
     history: [{
@@ -112,9 +110,7 @@ const Game = props => Component({
 
 // ========================================
 
-document.body.appendChild(
-  Game({ id: 'tic-tac-toe' })
-);
+document.body.appendChild(Game());
 
 function calculateWinner(squares) {
   const lines = [
