@@ -1,6 +1,3 @@
-const NODE = 0;
-const ATTR = 1;
-
 function VNode(tag, attributes = {}) {
   return {
     tag,
@@ -10,17 +7,29 @@ function VNode(tag, attributes = {}) {
 
     appendChild(child) {
       const id = `${this.id}.${this.children.length}`;
+      const newNode = typeof child === 'string' ?
+        TextVNode(child) : Object.assign(child, { id });
 
-      this.children.push(
-        Object.assign(child, { id })
-      );
+      this.children.push(newNode);
     }
   }
+}
+
+function TextVNode(value) {
+  const proto = {
+    appendChild: undefined,
+    id: undefined,
+    tags: undefined
+  };
+
+  return Object.assign({ value }, VNode(''), proto)
 }
 
 function diff(a, b) {
   if (a.tag !== b.tag) {
     return [{ target: a.id, type: NODE, value: b }];
+  } else if(a.value !== b.value) {
+    return [{ target: a.id, type: TEXT, value: b.value }];
   }
 
   let childrenPatches = [];

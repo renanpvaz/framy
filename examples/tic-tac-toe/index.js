@@ -110,7 +110,7 @@ const Game = props => Component({
 
 // ========================================
 
-document.body.appendChild(Game());
+render(Game());
 
 function calculateWinner(squares) {
   const lines = [

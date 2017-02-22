@@ -4,12 +4,18 @@ function createElement(tree) {
   deepAssign(el, tree.attributes);
 
   tree.children.forEach(
-    (child, i) => el.appendChild(createElement(child))
+    (child, i) => el.appendChild(
+      !child.tag ? createTextElement(child.value) : createElement(child)
+    )
   );
 
   el.setAttribute('data-id', tree.id);
 
   return el;
+}
+
+function createTextElement(value) {
+  return document.createTextNode(value);
 }
 
 function patch(patches, rootNode) {
@@ -26,6 +32,12 @@ function patch(patches, rootNode) {
           break;
         case ATTR:
           deepAssign(el, patch.value);
+          break;
+        case TEXT:
+          el.replaceChild(
+            createTextElement(patch.value),
+            el.firstChild
+          );
           break;
       }
     }
@@ -44,4 +56,19 @@ function findElementIn(rootNode, id) {
   );
 
   return found;
+}
+
+function update(oldTree, newTree) {
+  const patches = diff(oldTree, newTree);
+
+  store.setRoot(
+    patch(patches, store.root)
+  );
+
+  return newTree;
+}
+
+function render(tree) {
+  store.setRoot(createElement(tree));
+  document.body.appendChild(store.root);
 }

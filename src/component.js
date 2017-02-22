@@ -1,6 +1,7 @@
 const store = {
   lastId: 0,
   listeners: {},
+  root: null,
 
   triggerListener(key, payload) {
    const callback = this.listeners[key];
@@ -15,46 +16,22 @@ const store = {
 
    return id;
  },
+
+ setRoot(DOMNode) {
+   this.root = DOMNode;
+ }
 };
 
 function Component(proto) {
   const base = {
     state: {},
 
-    update(prevEl) {
-      let wasSwapped = false;
-      const nextEl = this.render();
-      const hasChildren = nextEl.children.length > 0;
+    update(oldTree) {
+      const newTree = update(oldTree, this.render());
+      
+      this.componentDidMount();
 
-      if (hasChildren) {
-        wasSwapped = this.updateMany(nextEl.childNodes, prevEl.childNodes);
-      } else {
-        wasSwapped = this.swapNodes(prevEl, nextEl);
-      }
-
-      if (wasSwapped) this.componentDidMount();
-
-      return  wasSwapped && !hasChildren ? nextEl : prevEl;
-    },
-
-    updateMany(nextEls, prevEls) {
-      const swaps = [].slice.call(nextEls).map(
-        (next, i, arr) => !!this.swapNodes(prevEls[i], next)
-      );
-
-      return swaps.some(_ => _);
-    },
-
-    swapNodes(oldEl, newEl) {
-      let areDifferent = !newEl.isEqualNode(oldEl);
-
-      if (!areDifferent) {
-        console.warn('render() was called but there was no change in the rendered output', newEl);
-      } else if (!!oldEl) {
-        requestAnimationFrame(() => oldEl.parentElement.replaceChild(newEl, oldEl));
-      }
-
-      return areDifferent;
+      return newTree;
     },
 
     setState(newState) {

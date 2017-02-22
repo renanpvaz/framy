@@ -5,7 +5,11 @@
     <title>Clock</title>
   </head>
   <body>
-    <script type="text/javascript" src="../../dist/framy.min.js"></script>
+    <script type="text/javascript" src="../../src/common.js"></script>
+    <script type="text/javascript" src="../../src/vdom.js"></script>
+    <script type="text/javascript" src="../../src/dom.js"></script>
+    <script type="text/javascript" src="../../src/elements.js"></script>
+    <script type="text/javascript" src="../../src/component.js"></script>
     <script type="text/javascript">
       const Clock = (props) => Component({
         state: {
@@ -23,7 +27,7 @@
         },
       });
 
-      document.body.appendChild(Clock());
+      render(Clock());
     </script>
   </body>
 </html>
