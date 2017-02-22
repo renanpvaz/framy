@@ -22,22 +22,39 @@ function Component(proto) {
     state: {},
 
     update(prevEl) {
+      let wasSwapped = false;
       const nextEl = this.render();
-      const wasSwapped = this.swapNodes(prevEl, nextEl);
+      const hasChildren = nextEl.children.length > 0;
+
+      if (hasChildren) {
+        wasSwapped = this.updateMany(nextEl.childNodes, prevEl.childNodes);
+      } else {
+        wasSwapped = this.swapNodes(prevEl, nextEl);
+      }
 
       if (wasSwapped) this.componentDidMount();
 
-      return wasSwapped ? nextEl : prevEl;
+      return  wasSwapped && !hasChildren ? nextEl : prevEl;
+    },
+
+    updateMany(nextEls, prevEls) {
+      const swaps = [].slice.call(nextEls).map(
+        (next, i, arr) => !!this.swapNodes(prevEls[i], next)
+      );
+
+      return swaps.some(_ => _);
     },
 
     swapNodes(oldEl, newEl) {
-      const areEqual = newEl.isEqualNode(oldEl);
+      let areDifferent = !newEl.isEqualNode(oldEl);
 
-      if (!areEqual && !!oldEl) {
-        oldEl.parentElement.replaceChild(newEl, oldEl);
+      if (!areDifferent) {
+        console.warn('render() was called but there was no change in the rendered output', newEl);
+      } else if (!!oldEl) {
+        requestAnimationFrame(() => oldEl.parentElement.replaceChild(newEl, oldEl));
       }
 
-      return !areEqual;
+      return areDifferent;
     },
 
     setState(newState) {
