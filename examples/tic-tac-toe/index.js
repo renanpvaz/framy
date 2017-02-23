@@ -97,7 +97,7 @@ const Game = props => Component({
     return (
       div({ className: 'game' },
         div({ className: 'game-board' },
-          Board({ id: 'board', onClick: this.handleClick.bind(this), squares: current.squares })
+          Board({ id: 'board', onClick: this.handleClick.bind(this), squares: current.squares }) // bind probably creates a new function
         ),
         div({ className: 'game-info' },
           div(status),

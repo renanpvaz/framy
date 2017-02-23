@@ -1,25 +1,14 @@
-const append = (el, child) => {
-  switch (typeof child) {
-    case 'object':
-      el.appendChild(child);
-      break;
-    case 'string':
-      el.appendChild(child);
-      break;
-  }
-};
-
 const createVNode = (name, textContentOrElementOrAttrs, ...children) => {
   const el = VNode(name);
   const type = typeof textContentOrElementOrAttrs;
 
   if ((type !== 'undefined' && textContentOrElementOrAttrs.tag) || type === 'string') {
-    append(el, textContentOrElementOrAttrs);
+    el.appendChild(textContentOrElementOrAttrs);
   } else if (type === 'object') {
     deepAssign(el.attributes, textContentOrElementOrAttrs);
   }
 
-  children.forEach(child =>  append(el, child));
+  children.forEach(child =>  el.appendChild(child));
 
   return el;
 };

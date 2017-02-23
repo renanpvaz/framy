@@ -9,7 +9,7 @@ function createElement(tree) {
     )
   );
 
-  el.setAttribute('data-id', tree.id);
+  el.setAttribute('id', tree.id);
 
   return el;
 }
@@ -21,7 +21,7 @@ function createTextElement(value) {
 function patch(patches, rootNode) {
   patches.forEach(
     patch => {
-      const el = findElementIn(rootNode, patch.target)[0];
+      const el = findElementIn(rootNode, patch.target);
 
       switch (patch.type) {
         case NODE:
@@ -47,15 +47,9 @@ function patch(patches, rootNode) {
 }
 
 function findElementIn(rootNode, id) {
-  const found = [];
+  if (id === '0') return [rootNode];
 
-  if (rootNode.getAttribute('data-id') === '0') return [rootNode];
-
-  rootNode.childNodes.forEach(
-    child => child.getAttribute('data-id') === id ? found.push(child) : null
-  );
-
-  return found;
+  return document.getElementById(id);
 }
 
 function update(oldTree, newTree) {

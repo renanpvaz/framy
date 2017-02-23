@@ -6,11 +6,24 @@ function VNode(tag, attributes = {}) {
     children: [],
 
     appendChild(child) {
-      const id = `${this.id}.${this.children.length}`;
-      const newNode = typeof child === 'string' ?
-        TextVNode(child) : Object.assign(child, { id });
+      this.children.push(
+        typeof child === 'string' ? TextVNode(child) : child
+      );
+      this.bumpId();
+    },
 
-      this.children.push(newNode);
+    bumpId() {
+      this.children.forEach((child, i) => {
+        child.setId(
+          typeof child === 'string' ?
+              this.id : this.id + '.' + i
+        );
+        child.bumpId();
+      });
+    },
+
+    setId(id) {
+      this.id = id;
     }
   }
 }
@@ -25,11 +38,15 @@ function TextVNode(value) {
   return Object.assign({ value }, VNode(''), proto)
 }
 
-function diff(a, b) {
+function diff(a, b, parent) {
   if (a.tag !== b.tag) {
-    return [{ target: a.id, type: NODE, value: b }];
-  } else if(a.value !== b.value) {
-    return [{ target: a.id, type: TEXT, value: b.value }];
+    return [
+      { target: a.id, type: NODE, value: b }
+    ];
+  } else if (a.value !== b.value) {
+    return [
+      { target: a.id.substr(0, a.id.length - 2), type: TEXT, value: b.value }
+    ];
   }
 
   let childrenPatches = [];
@@ -47,7 +64,7 @@ function diffAttributes(treeA, treeB) {
 
   Object.keys(treeA.attributes).forEach(
     key => {
-      if (treeA.attributes[key] !== treeB.attributes[key]) {
+      if (treeA.attributes[key].toString() !== treeB.attributes[key].toString()) {
         patches.push({
           target: treeA.id,
           type: ATTR,

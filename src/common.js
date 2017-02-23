@@ -2,7 +2,6 @@ const NODE = 0;
 const ATTR = 1;
 const TEXT = 2;
 
-
 function deepAssign(to, from) {
   Object.keys(from).forEach(key => {
     const toValue = to[key];
