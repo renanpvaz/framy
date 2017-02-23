@@ -38,10 +38,20 @@ function TextVNode(value) {
   return Object.assign({ value }, VNode(''), proto)
 }
 
-function diff(a, b, parent) {
+function diff(a, b) {
+  if (!a && !!b) {
+    return [
+      { target: b.id.substr(0, b.id.length - 2), type: NODE_ADD, value: b }
+    ];
+  } else if (!!a && !b) {
+    return [
+      { target: a.id, type: NODE_REMOVE }
+    ];
+  }
+
   if (a.tag !== b.tag) {
     return [
-      { target: a.id, type: NODE, value: b }
+      { target: a.id, type: NODE_REPLACE, value: b }
     ];
   } else if (a.value !== b.value) {
     return [
@@ -49,12 +59,13 @@ function diff(a, b, parent) {
     ];
   }
 
-  let childrenPatches = [];
   const attrPatches = diffAttributes(a, b);
+  let childrenPatches = [];
+  let length = b.children.length > a.children.length ? b.children.length : a.children.length;
 
-  a.children.forEach(
-    (child, i) => childrenPatches = [...childrenPatches, ...diff(child, b.children[i])]
-  );
+  for (let i = 0; i < length; i++) {
+    childrenPatches = [...childrenPatches, ...diff(a.children[i], b.children[i])];
+  }
 
   return [...attrPatches, ...childrenPatches];
 }

@@ -24,11 +24,19 @@ function patch(patches, rootNode) {
       const el = findElementIn(rootNode, patch.target);
 
       switch (patch.type) {
-        case NODE:
+        case NODE_REPLACE:
           el.parentElement.replaceChild(
             createElement(patch.value),
             el
           );
+          break;
+        case NODE_ADD:
+          el.appendChild(
+            createElement(patch.value)
+          );
+          break;
+        case NODE_REMOVE:
+          el.parentElement.removeChild(el);
           break;
         case ATTR:
           deepAssign(el, patch.value);
